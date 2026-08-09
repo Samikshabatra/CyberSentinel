@@ -1,0 +1,68 @@
+# QLoRA configuration tuned for an 8 GB consumer GPU (e.g. RTX 4060/5060 laptop).
+#
+#   python scripts/train.py --config configs/training_8gb.yaml
+#
+# What differs from configs/training.yaml and why:
+#   - batch size 1 with accumulation 16 keeps the effective batch at 16 while
+#     holding only one sequence of activations at a time
+#   - max_seq_length 768 fits the corpus (system prompt + event + JSON output is
+#     roughly 650 tokens) and is the single biggest lever on activation memory
+#   - gradient checkpointing trades compute for memory
+#   - LoRA rank stays at 16: rank has a negligible memory cost and dropping it
+#     would cost quality for no real saving
+
+base_model_name: Qwen/Qwen2.5-3B-Instruct
+output_dir: models/cybersentinel-lora
+max_seq_length: 768
+
+train_file: data/train/train_chat.jsonl
+validation_file: data/validation/validation_chat.jsonl
+
+learning_rate: 0.0002
+num_train_epochs: 3.0
+per_device_train_batch_size: 1
+per_device_eval_batch_size: 1
+gradient_accumulation_steps: 16
+warmup_ratio: 0.03
+weight_decay: 0.01
+lr_scheduler_type: cosine
+max_grad_norm: 0.3
+optim: paged_adamw_8bit
+seed: 20260808
+
+gradient_checkpointing: true
+bf16: true
+fp16: false
+
+logging_steps: 5
+# Checkpoint every 25 steps rather than once an epoch. At roughly 37 s/step an
+# epoch is over 50 minutes, so an interruption at epoch granularity is expensive;
+# step checkpoints cap the loss at about 15 minutes and make --resume useful.
+eval_strategy: steps
+eval_steps: 25
+save_strategy: steps
+save_steps: 25
+save_total_limit: 2
+load_best_model_at_end: true
+metric_for_best_model: eval_loss
+report_to: none
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  bias: none
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+quantization:
+  load_in_4bit: true
+  quant_type: nf4
+  double_quant: true
+  compute_dtype: bfloat16
