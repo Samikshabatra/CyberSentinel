@@ -1,0 +1,56 @@
+# Secrets
+.env
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Models / artifacts
+models/
+outputs/
+checkpoints/
+*.safetensors
+*.bin
+*.gguf
+
+# Data (keep curated seed + processed splits tracked explicitly if desired)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Local services
+qdrant_storage/
+pgdata/
+
+# Evaluation artifacts
+evaluation/results/*
+!evaluation/results/.gitkeep
+evaluation/plots/*
+!evaluation/plots/.gitkeep
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local databases
+*.db
+*.db-wal
+*.db-shm
