@@ -1,0 +1,58 @@
+# Retrieval-augmented generation configuration.
+# Environment variables override these values (see .env.example).
+
+knowledge_base:
+  directory: data/knowledge_base
+  sources:
+    - name: MITRE ATT&CK
+      file: mitre_attack.jsonl
+      url: https://attack.mitre.org/
+      licence: "MITRE ATT&CK is made available under the ATT&CK Terms of Use"
+    - name: CWE
+      file: cwe.jsonl
+      url: https://cwe.mitre.org/
+      licence: "CWE is free to use with attribution to MITRE"
+    - name: Guidance (NIST, OWASP, CISA)
+      file: guidance.jsonl
+      url: https://csrc.nist.gov/
+      licence: "US government publications are public domain; OWASP content is CC BY-SA"
+  # Optional live ingestion of the official ATT&CK STIX bundle:
+  #   python scripts/ingest_knowledge_base.py --fetch-attack
+  attack_stix_url: https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json
+
+chunking:
+  # Knowledge-base entries are short and self-contained, so chunks stay whole
+  # paragraphs; overlap preserves context across a split.
+  chunk_size: 900
+  overlap: 120
+
+embeddings:
+  # hash - deterministic, dependency-free, runs anywhere (default)
+  # sentence-transformers - trained encoder, better recall, needs the ml extra
+  backend: hash
+  model_name: sentence-transformers/all-MiniLM-L6-v2
+  dimension: 384
+
+vector_store:
+  provider: qdrant
+  collection: cybersentinel_kb
+  distance: cosine
+  # When Qdrant is unreachable the retriever falls back to a local JSON-backed
+  # store so analysis still runs; the store in use is reported in /health.
+  fallback: local
+
+retrieval:
+  top_k: 5
+  # Hash embeddings score lower in absolute terms than a trained encoder.
+  # Raise to about 0.25 when switching to sentence-transformers.
+  score_threshold: 0.05
+  rerank: true
+  # Blend of vector score and lexical overlap used by the reranker.
+  rerank_vector_weight: 0.7
+  max_context_chars: 4000
+
+grounding:
+  # A technique or CVE identifier is only reported when it appears in the
+  # retrieved context; anything else is recorded as a rejected claim.
+  require_identifier_in_context: true
+  catalogue_fallback: true

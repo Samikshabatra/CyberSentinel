@@ -1,0 +1,26 @@
+# Inference-time model configuration.
+# Environment variables override these values (see .env.example).
+
+base_model_name: Qwen/Qwen2.5-3B-Instruct
+
+# Backend:
+#   mock - deterministic rule-based analyst; no GPU, no downloads. Default so
+#          the application and its tests run anywhere.
+#   hf   - Hugging Face Transformers, optionally with the LoRA adapter attached.
+backend: mock
+
+# Path to the trained adapter. Empty means run the base model unmodified,
+# which is also how the "base model" arm of the evaluation is produced.
+adapter_path: ""
+
+generation:
+  max_new_tokens: 512
+  # Low temperature: the task is structured extraction, not creative writing.
+  temperature: 0.2
+  top_p: 0.9
+
+quantization:
+  load_in_4bit: true
+  compute_dtype: bfloat16
+
+device: auto
