@@ -158,16 +158,6 @@ section[data-testid="stSidebar"] div[role="radiogroup"] input {{ display: none; 
   font-family: {FONT_MONO}; font-size: .6rem; color: var(--faint);
   text-transform: uppercase; letter-spacing: .11em; margin: 1.1rem 0 .45rem .3rem;
 }}
-.cs-status {{
-  border: 1px solid var(--border); background: var(--surface);
-  border-radius: 10px; padding: .7rem .8rem; margin-top: .4rem;
-}}
-.cs-status-row {{
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: .74rem; padding: .16rem 0;
-}}
-.cs-status-key {{ color: var(--faint); }}
-.cs-status-val {{ font-family: {FONT_MONO}; color: var(--muted); font-size: .7rem; }}
 
 /* ---------- page header ---------- */
 .cs-header {{
@@ -428,13 +418,6 @@ def evidence_list(items: list[str]) -> str:
     if not items:
         return '<div class="cs-evidence">No supporting evidence was extracted.</div>'
     return "".join(f'<div class="cs-evidence">{item}</div>' for item in items)
-
-
-def status_row(key: str, value: str) -> str:
-    return (
-        f'<div class="cs-status-row"><span class="cs-status-key">{key}</span>'
-        f'<span class="cs-status-val">{value}</span></div>'
-    )
 
 
 # --------------------------------------------------------------------------- #

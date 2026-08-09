@@ -27,7 +27,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import theme  # noqa: E402
 
-from cybersentinel import __version__  # noqa: E402
 from cybersentinel.cybersecurity.risk import (  # noqa: E402
     IMPACT_SCALE,
     LIKELIHOOD_SCALE,
@@ -827,30 +826,9 @@ def main() -> None:
         st.markdown('<div class="cs-side-label">Console</div>', unsafe_allow_html=True)
         page = st.radio("Navigation", PAGES, label_visibility="collapsed")
 
-        st.markdown('<div class="cs-side-label">Backend</div>', unsafe_allow_html=True)
         st.session_state.setdefault("api_base", settings.api_base_url)
         if "use_api" not in st.session_state:
             st.session_state["use_api"] = api_available()
-
-        connected = st.session_state["use_api"]
-        st.markdown(
-            '<div class="cs-status">'
-            + theme.status_row(
-                "Transport",
-                "API" if connected else "in-process",
-            )
-            + theme.status_row("Model", settings.llm_backend)
-            + theme.status_row("Embeddings", settings.embedding_backend)
-            + theme.status_row("Adapter", "loaded" if settings.model_adapter_path else "none")
-            + theme.status_row("Version", __version__)
-            + "</div>",
-            unsafe_allow_html=True,
-        )
-
-        st.text_input("API base URL", key="api_base")
-        if st.button("Reconnect", width='stretch'):
-            st.session_state["use_api"] = api_available()
-            st.rerun()
 
     if page == "Overview":
         page_overview()
