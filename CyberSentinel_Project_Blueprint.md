@@ -1853,113 +1853,7 @@ Do not over-engineer.
 
 ---
 
-# 52. Claude Code Instructions
-
-You are the primary coding agent for this project.
-
-Your job is to build the project incrementally and maintain a production-quality codebase.
-
-IMPORTANT:
-
-1. Do not generate the entire project blindly in one step.
-2. Inspect the repository before modifying files.
-3. Create a plan before large changes.
-4. Implement one phase at a time.
-5. Run tests after meaningful changes.
-6. Fix errors before proceeding.
-7. Never invent APIs, model IDs, dataset URLs, MITRE IDs, or package APIs.
-8. Verify current library APIs when necessary.
-9. Keep dependencies compatible.
-10. Do not hardcode secrets.
-11. Keep training optional from application startup.
-12. The application must be runnable without retraining the model.
-13. Use mock/fallback components for tests where GPU/API access is unavailable.
-14. Make model paths and services configurable.
-15. Keep the project understandable enough for a student to explain in a viva.
-
----
-
-# 53. Claude Code Execution Order
-
-Start with:
-
-### Step 1
-
-Inspect the repository.
-
-### Step 2
-
-Create a project plan in:
-
-`docs/implementation_plan.md`
-
-### Step 3
-
-Create the project skeleton.
-
-### Step 4
-
-Implement configuration, logging, schemas and tests.
-
-### Step 5
-
-Implement dataset preparation.
-
-### Step 6
-
-Implement fine-tuning.
-
-### Step 7
-
-Implement inference.
-
-### Step 8
-
-Implement RAG.
-
-### Step 9
-
-Implement LangGraph.
-
-### Step 10
-
-Implement database persistence.
-
-### Step 11
-
-Implement FastAPI.
-
-### Step 12
-
-Implement Streamlit.
-
-### Step 13
-
-Implement evaluation.
-
-### Step 14
-
-Implement Docker support.
-
-### Step 15
-
-Run tests and fix issues.
-
-### Step 16
-
-Update documentation.
-
-At the end of each phase, summarize:
-
-- files created/changed
-- what works
-- tests run
-- remaining issues
-- next phase
-
----
-
-# 54. Do Not Overclaim
+# 52. Do Not Overclaim
 
 The system should never claim:
 
@@ -1979,7 +1873,7 @@ Use language such as:
 
 ---
 
-# 55. Final Success Criteria
+# 53. Final Success Criteria
 
 The project is considered complete only when:
 
@@ -2006,7 +1900,7 @@ The project is considered complete only when:
 
 ---
 
-# 56. Recommended Future Extensions
+# 54. Recommended Future Extensions
 
 Only implement these after the core system works:
 
@@ -2026,7 +1920,7 @@ Do not let future extensions compromise the core project.
 
 ---
 
-# 57. Final Architecture Summary
+# 55. Final Architecture Summary
 
 The final system should demonstrate the following relationship:
 
