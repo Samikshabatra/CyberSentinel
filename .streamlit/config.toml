@@ -1,0 +1,17 @@
+# Base theme for the CyberSentinel console.
+# These values seed Streamlit's own widget chrome; the full visual system lives
+# in app/theme.py, which must stay in sync with the colours below.
+
+[theme]
+base = "dark"
+primaryColor = "#4C9AFF"
+backgroundColor = "#080B12"
+secondaryBackgroundColor = "#10151F"
+textColor = "#E4E9F2"
+font = "sans serif"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false
