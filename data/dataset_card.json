@@ -1,0 +1,152 @@
+{
+  "name": "CyberSentinel synthetic cybersecurity instruction dataset",
+  "version": "1.0",
+  "origin": "synthetic",
+  "generator": "cybersentinel.training.dataset",
+  "seed": 20260808,
+  "examples_per_category_target": 120,
+  "split_targets_per_category": {
+    "train": 96,
+    "validation": 12,
+    "test": 12
+  },
+  "templates_total": 50,
+  "templates_per_split": {
+    "train": 21,
+    "validation": 14,
+    "test": 15
+  },
+  "template_ids_per_split": {
+    "train": [
+      "auth-01",
+      "ben-01",
+      "ben-04",
+      "bf-01",
+      "bf-02",
+      "bf-05",
+      "cred-01",
+      "ddos-02",
+      "exf-02",
+      "ins-02",
+      "mal-03",
+      "pe-03",
+      "ph-01",
+      "ph-04",
+      "recon-01",
+      "sqli-02",
+      "sqli-03",
+      "unk-03",
+      "unk-04",
+      "vuln-03",
+      "xss-02"
+    ],
+    "validation": [
+      "auth-03",
+      "ben-03",
+      "bf-04",
+      "cred-02",
+      "ddos-03",
+      "exf-03",
+      "mal-01",
+      "pe-02",
+      "ph-02",
+      "recon-02",
+      "sqli-01",
+      "unk-02",
+      "vuln-01",
+      "xss-01"
+    ],
+    "test": [
+      "auth-02",
+      "ben-02",
+      "bf-03",
+      "cred-03",
+      "ddos-01",
+      "exf-01",
+      "ins-01",
+      "mal-02",
+      "pe-01",
+      "ph-03",
+      "recon-03",
+      "sqli-04",
+      "unk-01",
+      "vuln-02",
+      "xss-03"
+    ]
+  },
+  "counts": {
+    "train": 1333,
+    "validation": 162,
+    "test": 175
+  },
+  "class_distribution": {
+    "train": {
+      "Brute Force": 95,
+      "Phishing": 90,
+      "SQL Injection": 89,
+      "Cross-Site Scripting": 87,
+      "Malware": 84,
+      "DDoS / Network Attack": 81,
+      "Port Scanning / Reconnaissance": 96,
+      "Privilege Escalation": 85,
+      "Data Exfiltration": 92,
+      "Credential Attack": 85,
+      "Vulnerability / Exploit": 87,
+      "Suspicious Authentication Activity": 91,
+      "Insider Threat": 94,
+      "Benign": 87,
+      "Unknown": 90
+    },
+    "validation": {
+      "Brute Force": 12,
+      "Phishing": 11,
+      "SQL Injection": 12,
+      "Cross-Site Scripting": 12,
+      "Malware": 10,
+      "DDoS / Network Attack": 12,
+      "Port Scanning / Reconnaissance": 12,
+      "Privilege Escalation": 12,
+      "Data Exfiltration": 12,
+      "Credential Attack": 12,
+      "Vulnerability / Exploit": 12,
+      "Suspicious Authentication Activity": 12,
+      "Benign": 11,
+      "Unknown": 10
+    },
+    "test": {
+      "Brute Force": 12,
+      "Phishing": 12,
+      "SQL Injection": 11,
+      "Cross-Site Scripting": 12,
+      "Malware": 12,
+      "DDoS / Network Attack": 11,
+      "Port Scanning / Reconnaissance": 12,
+      "Privilege Escalation": 12,
+      "Data Exfiltration": 12,
+      "Credential Attack": 12,
+      "Vulnerability / Exploit": 11,
+      "Suspicious Authentication Activity": 12,
+      "Insider Threat": 12,
+      "Benign": 12,
+      "Unknown": 10
+    }
+  },
+  "duplicates_removed": {
+    "train": 107,
+    "validation": 6,
+    "test": 5
+  },
+  "split_method": "Template-level, stratified by attack category. Templates are assigned to a split before instances are generated, so no phrasing is shared between train and test. Instance counts per split are then scaled to the 80/10/10 ratio, because a category may hold a different number of templates in each split.",
+  "contamination_controls": [
+    "Templates are partitioned between splits; instances never cross splits.",
+    "Normalised-text deduplication is applied test-first, then validation, then train.",
+    "Test examples were not used to author training examples."
+  ],
+  "slot_data_policy": "Addresses come from RFC 5737 documentation ranges and domains from RFC 2606 example domains. No real infrastructure, person or organisation is referenced.",
+  "licence": "Generated for this project; released with the project under the MIT licence.",
+  "limitations": [
+    "Template-generated text is more regular than production telemetry.",
+    "Category priors reflect template counts, not real-world incident frequency.",
+    "Severity labels follow the project's own convention, not a published standard."
+  ]
+}
