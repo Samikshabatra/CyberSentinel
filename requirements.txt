@@ -1,0 +1,21 @@
+# Runtime dependencies for the Vercel serverless deployment of the API.
+#
+# Deliberately a subset of pyproject.toml: the serverless bundle has a 250 MB
+# unzipped limit, so packages that are only reachable through optional code
+# paths are left out.
+#   - qdrant-client: imported lazily inside QdrantVectorStore; without it the
+#     store construction fails and the local JSON fallback takes over, which is
+#     what a serverless deployment wants anyway.
+#   - torch / transformers / sentence-transformers: LLM_BACKEND=mock and
+#     EMBEDDING_BACKEND=hash need none of them.
+#   - uvicorn: Vercel runs the ASGI app directly.
+pydantic>=2.7
+pydantic-settings>=2.2
+python-dotenv>=1.0
+pyyaml>=6.0
+fastapi>=0.111
+httpx>=0.27
+sqlalchemy>=2.0
+psycopg[binary]>=3.1
+langgraph>=0.2.28
+langchain-core>=0.3.0

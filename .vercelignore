@@ -1,0 +1,19 @@
+# Only the API and the data it reads at request time belong in the bundle.
+notebooks/
+tests/
+evaluation/
+docs/
+models/
+outputs/
+checkpoints/
+app/
+scripts/
+data/train/
+data/validation/
+data/test/
+data/raw/
+*.png
+*.ipynb
+Dockerfile
+docker-compose.yml
+CyberSentinel_Project_Blueprint.md

@@ -33,6 +33,10 @@ data/raw/*
 !data/raw/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+# The hash-embedding vector index is deterministic and small; it is tracked
+# so the read-only serverless deployment can answer queries without an
+# ingestion step at cold start.
+!data/processed/cybersentinel_kb_local.json
 
 # Local services
 qdrant_storage/
