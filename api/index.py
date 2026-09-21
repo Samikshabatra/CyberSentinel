@@ -36,6 +36,34 @@ os.environ.setdefault("LLM_BACKEND", "mock")
 os.environ.setdefault("EMBEDDING_BACKEND", "hash")
 os.environ.setdefault("APP_ENV", "production")
 
-from cybersentinel.api.main import app  # noqa: E402
+from urllib.parse import parse_qsl, urlencode  # noqa: E402
+
+from cybersentinel.api.main import app as _fastapi_app  # noqa: E402
+
+# Every request reaches this function through the catch-all rewrite in
+# vercel.json, and a rewrite replaces the request path with its destination:
+# the application would see "/api/index" for "/health", "/docs" and everything
+# else, and match none of them. The rewrite therefore carries the original path
+# in a query parameter, which this wrapper puts back into the ASGI scope before
+# the application sees the request.
+_PATH_PARAM = "__vercel_path"
+
+
+async def app(scope: dict, receive: object, send: object) -> None:
+    """ASGI wrapper that restores the pre-rewrite request path."""
+    if scope.get("type") in {"http", "websocket"}:
+        params = parse_qsl(scope.get("query_string", b"").decode("latin-1"), keep_blank_values=True)
+        original = next((value for key, value in params if key == _PATH_PARAM), None)
+        if original:
+            scope = dict(scope)
+            scope["path"] = original
+            scope["raw_path"] = original.encode("utf-8")
+            # The marker is an artefact of the rewrite; a handler reading query
+            # parameters should never see it.
+            remaining = [(key, value) for key, value in params if key != _PATH_PARAM]
+            scope["query_string"] = urlencode(remaining).encode("latin-1")
+
+    await _fastapi_app(scope, receive, send)  # type: ignore[operator]
+
 
 __all__ = ["app"]
