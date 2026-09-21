@@ -14,6 +14,22 @@ human. Nothing is executed automatically.
 
 ---
 
+## Live demo
+
+| | |
+|---|---|
+| **Analyst console** | https://cybersentinel-79bcvw2c2uyrlmj9thd2bu.streamlit.app |
+| **API** | https://cybersentinel-chi.vercel.app |
+| **Interactive API docs** | https://cybersentinel-chi.vercel.app/docs |
+| **Source** | https://github.com/Samikshabatra/CyberSentinel |
+
+Both are free-tier deployments running the dependency-free fallbacks, so read
+[Deployment](#20-deployment) before drawing conclusions from what they return:
+classification comes from the deterministic rules backend rather than the
+fine-tuned model, and stored incidents do not survive a restart.
+
+---
+
 ## Table of contents
 
 1. [Problem](#1-problem)
@@ -35,6 +51,7 @@ human. Nothing is executed automatically.
 17. [Security considerations](#17-security-considerations)
 18. [Limitations](#18-limitations)
 19. [Future work](#19-future-work)
+20. [Deployment](#20-deployment)
 
 ---
 
@@ -121,8 +138,8 @@ Runs with **no GPU, no Docker and no API keys**. Fallbacks are built in: a
 deterministic rules backend, a local vector store and SQLite.
 
 ```bash
-git clone <repository-url>
-cd LLM_Project
+git clone https://github.com/Samikshabatra/CyberSentinel.git
+cd CyberSentinel
 
 python -m venv .venv
 .venv\Scripts\activate            # Windows
@@ -427,6 +444,66 @@ requires analyst validation.
 - LLM-as-a-judge metrics alongside the deterministic ones
 - Optional SIEM integration and MCP-based tool access
 - Authentication, rate limiting and multi-tenancy for real deployment
+
+---
+
+## 20. Deployment
+
+The two live services are deployed separately, because they have opposite
+runtime shapes: the API answers one request and exits, while the console holds
+an open connection per viewer.
+
+### API - Vercel (serverless)
+
+| | |
+|---|---|
+| Entry point | `api/index.py`, an ASGI wrapper around `cybersentinel.api.main:app` |
+| Dependencies | `requirements.txt` (repository root) |
+| Configuration | `vercel.json` |
+
+```bash
+vercel deploy --prod
+```
+
+Three things differ from running the API locally:
+
+* **The request path is restored by hand.** The catch-all rewrite replaces the
+  path with its destination, so it carries the original in a query parameter
+  that `api/index.py` puts back into the ASGI scope.
+* **The vector index is read from a committed file.** `qdrant-client` is left
+  out of the bundle, so the store falls back to
+  `data/processed/cybersentinel_kb_local.json`, which is tracked to avoid an
+  ingestion step on every cold start.
+* **Storage is ephemeral.** The bundle is read-only, so SQLite lives in `/tmp`
+  and incidents are lost whenever the instance recycles. Set `DATABASE_URL` to a
+  managed PostgreSQL instance for persistence; `psycopg` is already bundled.
+
+### Console - Streamlit Community Cloud
+
+| | |
+|---|---|
+| Entry point | `app/streamlit_app.py` |
+| Dependencies | `app/requirements.txt` |
+| Configuration | `.streamlit/config.toml` (must stay at the repository root) |
+
+Set one secret so the console talks to the deployed API:
+
+```toml
+API_BASE_URL = "https://cybersentinel-chi.vercel.app"
+```
+
+Without it the console falls back to running the workflow in-process against
+its own local database, which works but no longer demonstrates the API.
+
+### What the demo does not show
+
+`LLM_BACKEND=mock` in both deployments. Classification comes from the
+deterministic rules backend, so events it has no keywords for return
+`Unknown` with zero confidence - honest behaviour, but not the fine-tuned
+model. Model-based analysis needs `LLM_BACKEND=hf` and a GPU host; neither
+free tier provides one.
+
+The public API is unauthenticated. It is a demonstration, not a service.
 
 ---
 
