@@ -41,7 +41,9 @@ ml = [
     "sentence-transformers>=3.0",
 ]
 ui = [
-    "streamlit>=1.37",
+    # 1.49 introduced width="stretch"; the UI uses it in place of the
+    # deprecated use_container_width.
+    "streamlit>=1.49",
     "pandas>=2.2",
     "plotly>=5.22",
 ]
